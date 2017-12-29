@@ -11,8 +11,8 @@ for i=1:length(nrData)
     errors=[errors eT(:,2)];
 end
 
-%test varying nr Data using pixel representation without thresholding
+%test varying nr Data using pixel representation withut thresholding
 for i=1:length(nrData)
-    eT=classifiersErrors(nrData(i),true,9,'bicubic',false,false);
+    eT=classifiersErrors(nrData(i),true,9,'bicubic',true,false);
     errors=[errors eT(:,2)];
 end
