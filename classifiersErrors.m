@@ -25,7 +25,7 @@ e2=testc(tst,w2);
 w3 = parzenc(trn);
 e3=testc(tst, w3);
 
-w4 = loglc(trn); %neural networks package was not working on my laptop so i changed it. sorry!Barbara
+w4 = bpxnc(trn, [10 10 10]); 
 e4=testc(tst,w4);
 
 w5 = loglc(trn); 
@@ -89,7 +89,7 @@ else
 % w3 = parzenc(trn);
 % e3=testc(tst, w3);
 % 
-% w4 = loglc(trn); %neural networks package was not working on my laptop so i changed it. sorry!Barbara
+% w4 = bp(trn); %neural networks package was not working on my laptop so i changed it. sorry!Barbara
 % e4=testc(tst,w4);
 % 
 % w5 = loglc(trn); 
@@ -113,7 +113,7 @@ e2=testc(tst,w2);
 w3 = parzenc(trn);
 e3=testc(tst, w3);
 
-w4 = loglc(trn); %neural networks package was not working on my laptop so I changed it. sorry!Barbara
+w4 = bpxnc(trn, [10 10 10]); 
 e4=testc(tst,w4);
 
 w5 = loglc(trn); 
@@ -126,7 +126,7 @@ end
 %Producing output error table
 errorTable=cell(7,2);
 class =["svc" "qdc" "parzen" "bpxnc" "loglc" "knnc"];
-errors = [strcat("feature:", strjoin(featcombi), "nrTrObjectsPerClass:",string(nrTrObjectsPerClass)," resizing:",string(resizing)," resizeSize:",string(resizeSize)," resizeMethod:",string(resizeMethod)," thresholding:",string(thresholding)) e1 e2 e3 e4 e5 e6];
+errors = [strcat("feature:", strjoin(featcombi), " nrTrObjectsPerClass:",string(nrTrObjectsPerClass)," resizing:",string(resizing)," resizeSize:",string(resizeSize)," resizeMethod:",string(resizeMethod)," thresholding:",string(thresholding)) e1 e2 e3 e4 e5 e6];
 for i=1:7
     errorTable{i,2}=errors(i);
     if i>1

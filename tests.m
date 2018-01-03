@@ -1,8 +1,8 @@
-    %Tests
+%Tests
 % errorTable = classifiersErrors(nrTrObjectsPerClass,resizing,resizeSize,resizeMethod,thresholding,features)
 
 %changing number of data
-nrData = [5 10 25];
+nrData = [200 300 400 500 600 700 800 900 1000];
 errors={" " ;"svc" ;"qdc"; "parzen" ;"bpxnc"; "loglc"; "knnc"};
 feat = ["hog", "proj", "chain"];
 
@@ -29,3 +29,6 @@ for i=1:length(nrData)
         end
     end
 end
+
+%Exporting to CSV to make plots in R.
+cell2csv("testsPR.csv",errors);
