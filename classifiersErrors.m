@@ -1,5 +1,5 @@
 % PR assignment 
-function errorTable = classifiersErrors(nrTrObjectsPerClass,resizing,resizeSize,resizeMethod,thresholding,features)
+function errorTable = classifiersErrors(nrTrObjectsPerClass,resizing,resizeSize,resizeMethod,thresholding,features, featcombi)
 %preprocessing : resizing all images to same square dimensions
 a = prnist([0:9],[1:(1000/nrTrObjectsPerClass):1000]);
 if (resizing)
@@ -39,22 +39,19 @@ else
 % %this part to be used when we have our feautures
 % %automatic feature select
 
-% feat = ["hog", "proj", "chain"];
-% for i = 1:3
-%    combi =  combntns(feat, i);
-%    for j = 1:size(combi,1)
+
 %        feat_select = [];
-%        if (ismember("hog", combi(j,:)))
+%        if (ismember("hog", featcombi))
 %            %write code for hog
 %            feat_hog=[ 1 2 3];
 %             feat_select = [feat_select feat_hog];
 %        end
-%        if (ismember("proj", combi(j,:)))
+%        if (ismember("proj", featcombi))
 %            %write code for proj
 %            feat_proh= [ 5 6 7];
 %             feat_select = [feat_select feat_proj];
 %        end
-%        if (ismember("chain", combi(j,:)))
+%        if (ismember("chain", featcombi))
 %            %write code for chain
 %            feat_chain = [8 9];
 %             feat_select = [feat_select feat_chain];
@@ -78,22 +75,7 @@ else
 %         w6 = knnc(trn);
 %         e6=testc(tst,w6);
 %        
-%         errorTable=cell(7,2);
-%         class =["svc" "qdc" "parzen" "bpxnc" "loglc" "knnc"];
-%         errors = [strcat("feature:",strjoin(combi(j,:))," nrTrObjectsPerClass:",string(nrTrObjectsPerClass)," resizing:",string(resizing)," resizeSize:",string(resizeSize)," resizeMethod:",string(resizeMethod)," thresholding:",string(thresholding)) e1 e2 e3 e4 e5 e6];
-% % barbara in the above line you have to rethink about the structure of the
-% % table(i guess), how would you like to show the combination of feature
-% % in the table. strjoin(combi(j,:)) on each iteration gives the name of
-% % selected features. Like ( "hog", "proj", "proj hog", "hog chain proj")
-% % etc
-%         for i=1:7
-%             errorTable{i,2}=errors(i);
-%             if i>1
-%                errorTable{i,1}=class(i-1); 
-%             end
-%         end
-%    end
-% end
+%        
        
 % % manual feature select which uses featureSelect functio    
 % pr_ds_feat = featureSelect(true, true, true);
@@ -144,7 +126,7 @@ end
 %Producing output error table
 errorTable=cell(7,2);
 class =["svc" "qdc" "parzen" "bpxnc" "loglc" "knnc"];
-errors = [strcat("nrTrObjectsPerClass:",string(nrTrObjectsPerClass)," resizing:",string(resizing)," resizeSize:",string(resizeSize)," resizeMethod:",string(resizeMethod)," thresholding:",string(thresholding)) e1 e2 e3 e4 e5 e6];
+errors = [strcat("feature:", strjoin(featcombi), "nrTrObjectsPerClass:",string(nrTrObjectsPerClass)," resizing:",string(resizing)," resizeSize:",string(resizeSize)," resizeMethod:",string(resizeMethod)," thresholding:",string(thresholding)) e1 e2 e3 e4 e5 e6];
 for i=1:7
     errorTable{i,2}=errors(i);
     if i>1
