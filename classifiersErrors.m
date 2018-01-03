@@ -35,7 +35,88 @@ w6 = knnc(trn);
 e6=testc(tst,w6);
  
 else 
-% using features
+% % using features
+% %this part to be used when we have our feautures
+% %automatic feature select
+
+% feat = ["hog", "proj", "chain"];
+% for i = 1:3
+%    combi =  combntns(feat, i);
+%    for j = 1:size(combi,1)
+%        feat_select = [];
+%        if (ismember("hog", combi(j,:)))
+%            %write code for hog
+%            feat_hog=[ 1 2 3];
+%             feat_select = [feat_select feat_hog];
+%        end
+%        if (ismember("proj", combi(j,:)))
+%            %write code for proj
+%            feat_proh= [ 5 6 7];
+%             feat_select = [feat_select feat_proj];
+%        end
+%        if (ismember("chain", combi(j,:)))
+%            %write code for chain
+%            feat_chain = [8 9];
+%             feat_select = [feat_select feat_chain];
+%        end
+%        [trn,tst] = gendat(feat_select,0.8);
+%         w1 = svc(trn);
+%         e1=testc(tst, w1);
+% 
+%         w2 = qdc(trn);
+%         e2=testc(tst,w2);
+% 
+%         w3 = parzenc(trn);
+%         e3=testc(tst, w3);
+% 
+%         w4 = loglc(trn); %neural networks package was not working on my laptop so I changed it. sorry!Barbara
+%         e4=testc(tst,w4);
+% 
+%         w5 = loglc(trn); 
+%         e5=testc(tst, w5);
+% 
+%         w6 = knnc(trn);
+%         e6=testc(tst,w6);
+%        
+%         errorTable=cell(7,2);
+%         class =["svc" "qdc" "parzen" "bpxnc" "loglc" "knnc"];
+%         errors = [strcat("feature:",strjoin(combi(j,:))," nrTrObjectsPerClass:",string(nrTrObjectsPerClass)," resizing:",string(resizing)," resizeSize:",string(resizeSize)," resizeMethod:",string(resizeMethod)," thresholding:",string(thresholding)) e1 e2 e3 e4 e5 e6];
+% % barbara in the above line you have to rethink about the structure of the
+% % table(i guess), how would you like to show the combination of feature
+% % in the table. strjoin(combi(j,:)) on each iteration gives the name of
+% % selected features. Like ( "hog", "proj", "proj hog", "hog chain proj")
+% % etc
+%         for i=1:7
+%             errorTable{i,2}=errors(i);
+%             if i>1
+%                errorTable{i,1}=class(i-1); 
+%             end
+%         end
+%    end
+% end
+       
+% % manual feature select which uses featureSelect functio    
+% pr_ds_feat = featureSelect(true, true, true);
+% [trn,tst] = gendat(pr_ds_feat,0.8);
+% w1 = svc(trn);
+% e1=testc(tst, w1);
+% 
+% w2 = qdc(trn);
+% e2=testc(tst,w2);
+% 
+% w3 = parzenc(trn);
+% e3=testc(tst, w3);
+% 
+% w4 = loglc(trn); %neural networks package was not working on my laptop so i changed it. sorry!Barbara
+% e4=testc(tst,w4);
+% 
+% w5 = loglc(trn); 
+% e5=testc(tst, w5);
+% 
+% w6 = knnc(trn);
+% e6=testc(tst,w6);
+
+
 features = im_features(a, a, 'all');
 pr_ds_features=prdataset(features);
 [sel,r] =featself(pr_ds_features,'maha-s',20);
@@ -50,7 +131,7 @@ e2=testc(tst,w2);
 w3 = parzenc(trn);
 e3=testc(tst, w3);
 
-w4 = loglc(trn); %neural networks package was not working on my laptop so i changed it. sorry!Barbara
+w4 = loglc(trn); %neural networks package was not working on my laptop so I changed it. sorry!Barbara
 e4=testc(tst,w4);
 
 w5 = loglc(trn); 
