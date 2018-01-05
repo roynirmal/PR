@@ -98,9 +98,36 @@ else
 % w6 = knnc(trn);
 % e6=testc(tst,w6);
 
+feat_select= zeros(nrTrObjectsPerClass*10,1);
+%write code for hog
+            feat_hog=[ ];
+            feat_select = [feat_select feat_hog];
 
+%write code for proj
+            feat_proj= [ ];
+            feat_select = [feat_select feat_proj];
+
+
+%write code for chain
+            feat_chain = [ ];
+%             feat_select = [feat_select feat_chain];
+v= ['digit_0';
+    'digit_1';
+    'digit_2';
+    'digit_3';
+    'digit_4';
+    'digit_5';
+    'digit_6';
+    'digit_7';
+    'digit_8';
+    'digit_9'
+];
+% v = [ 1,2,3,4,5,6,7,8,9,10];
+label = genlab([nrTrObjectsPerClass nrTrObjectsPerClass nrTrObjectsPerClass nrTrObjectsPerClass nrTrObjectsPerClass nrTrObjectsPerClass nrTrObjectsPerClass nrTrObjectsPerClass nrTrObjectsPerClass nrTrObjectsPerClass],v);
+feat_select = prdataset(feat_select, label);
 features = im_features(a, a, 'all');
-pr_ds_features=prdataset(features);
+features1 = [features feat_select];
+pr_ds_features=prdataset(features1);
 [sel,r] =featself(pr_ds_features,'maha-s',20);
 
 [trn,tst] = gendat(pr_ds_features*sel,0.8);
@@ -126,7 +153,7 @@ end
 %Producing output error table
 errorTable=cell(7,2);
 class =["svc" "qdc" "parzen" "bpxnc" "loglc" "knnc"];
-errors = [strcat("feature:", strjoin(featcombi), " nrTrObjectsPerClass:",string(nrTrObjectsPerClass)," resizing:",string(resizing)," resizeSize:",string(resizeSize)," resizeMethod:",string(resizeMethod)," thresholding:",string(thresholding)) e1 e2 e3 e4 e5 e6];
+errors = [strcat( " nrTrObjectsPerClass:",string(nrTrObjectsPerClass)," resizing:",string(resizing)," resizeSize:",string(resizeSize)," resizeMethod:",string(resizeMethod)," thresholding:",string(thresholding)) e1 e2 e3 e4 e5 e6];
 for i=1:7
     errorTable{i,2}=errors(i);
     if i>1
