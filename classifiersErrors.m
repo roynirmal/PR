@@ -10,9 +10,10 @@ end
 if (thresholding)
     a=im_threshold(a,'otsu');
 end
-pr_ds=prdataset(a);
+
 
 if (not(features))
+    pr_ds=prdataset(a);
 %Training with several classifiers
 %Splitting data - 80% train and 20 % test
 [trn,tst] = gendat(pr_ds,0.8);
@@ -98,19 +99,30 @@ else
 % w6 = knnc(trn);
 % e6=testc(tst,w6);
 
-feat_select= zeros(nrTrObjectsPerClass*10,1);
+
+for k = 1 : nrTrObjectsPerClass*10
+    
+c = reshape(+a(k,:), [resizeSize+2 resizeSize+2])' ;
+
+
 %write code for hog
-            feat_hog=[ ];
-            feat_select = [feat_select feat_hog];
+            feat_hog(k,:) = hog_features(c, 4);
+            
 
 %write code for proj
-            feat_proj= [ ];
-            feat_select = [feat_select feat_proj];
+level = graythresh(c);
+binarized = imbinarize(c,level);
+            feat_proj(k,:) = projection_features(binarized);
+            %feat_select = [feat_select feat_proj];
 
 
 %write code for chain
-            feat_chain = [ ];
+            B=bwboundaries(binarized,8,'noholes');
+            C=chaincode(B{1,1});
+            feat_chain(k,:)=hist(C.code,8);
 %             feat_select = [feat_select feat_chain];
+end
+feat_select = [feat_hog feat_proj feat_chain];
 v= ['digit_0';
     'digit_1';
     'digit_2';
@@ -124,7 +136,7 @@ v= ['digit_0';
 ];
 % v = [ 1,2,3,4,5,6,7,8,9,10];
 label = genlab([nrTrObjectsPerClass nrTrObjectsPerClass nrTrObjectsPerClass nrTrObjectsPerClass nrTrObjectsPerClass nrTrObjectsPerClass nrTrObjectsPerClass nrTrObjectsPerClass nrTrObjectsPerClass nrTrObjectsPerClass],v);
-feat_select = prdataset(feat_select, label);
+feat_select = prdataset(double(feat_select), label);
 features = im_features(a, a, 'all');
 features1 = [features feat_select];
 pr_ds_features=prdataset(features1);
