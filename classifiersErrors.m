@@ -1,7 +1,7 @@
 % PR assignment 
-function errorTable = classifiersErrors(nrTrObjectsPerClass,resizing,resizeSize,resizeMethod,thresholding,features, featcombi)
+function errorTable = classifiersErrors(nrTrObjectsPerClass,resizing,resizeSize,resizeMethod,thresholding,features, nrFeat,featselect,pca)
 %preprocessing : resizing all images to same square dimensions
-a = prnist([0:9],[1:(1000/nrTrObjectsPerClass):1000]);
+a = prnist([0:9],[1:100:1000]);
 if (resizing)
     preproc = im_box([],0,1)*im_resize([],[resizeSize resizeSize],resizeMethod)*im_box([],1,0); %resize method needs tuning
     a = a*preproc;
@@ -16,7 +16,7 @@ if (not(features))
     pr_ds=prdataset(a);
 %Training with several classifiers
 %Splitting data - 80% train and 20 % test
-[trn,tst] = gendat(pr_ds,0.8);
+[trn,tst] = gendat(pr_ds,nrTrObjectsPerClass/1000);
 w1 = svc(trn);
 e1=testc(tst, w1);
 
@@ -140,10 +140,26 @@ feat_select = prdataset(double(feat_select), label);
 features = im_features(a, a, 'all');
 features1 = [features feat_select];
 pr_ds_features=prdataset(features1);
-[sel,r] =featself(pr_ds_features,'maha-s',20);
 
-[trn,tst] = gendat(pr_ds_features*sel,0.8);
-w1 = svc(trn);
+
+if (featselect =="featselp")
+    [sel,r] = featselp(pr_ds_features,'maha-s',nrFeat);
+    [trn,tst] = gendat(pr_ds_features*sel,nrTrObjectsPerClass/1000);
+elseif (featselect == "featselo")
+    [sel,r] =featselo(pr_ds_features,'maha-s',nrFeat);
+    [trn,tst] = gendat(pr_ds_features*sel,nrTrObjectsPerClass/1000);
+else   
+[trn,tst] = gendat(pr_ds_features,nrTrObjectsPerClass/1000);
+end
+
+if (pca ~= false)
+  sel=scalem([],'variance')*pcam([],pca);
+  pcaTrained=trn*sel;
+  trn = trn*pcaTrained;
+  tst = tst*pcaTrained;
+end
+
+w1 = svc(trn); 
 e1=testc(tst, w1);
 
 w2 = qdc(trn);
@@ -165,7 +181,7 @@ end
 %Producing output error table
 errorTable=cell(7,2);
 class =["svc" "qdc" "parzen" "bpxnc" "loglc" "knnc"];
-errors = [strcat( " nrTrObjectsPerClass:",string(nrTrObjectsPerClass)," resizing:",string(resizing)," resizeSize:",string(resizeSize)," resizeMethod:",string(resizeMethod)," thresholding:",string(thresholding)) e1 e2 e3 e4 e5 e6];
+errors = [strcat( " nrTrObjectsPerClass:",string(nrTrObjectsPerClass)," resizing:",string(resizing)," resizeSize:",string(resizeSize)," resizeMethod:",string(resizeMethod)," thresholding:",string(thresholding)," nrFeatures",string(nrFeat)," featSelect",string(featselect)," pca",string(pca)) e1 e2 e3 e4 e5 e6];
 for i=1:7
     errorTable{i,2}=errors(i);
     if i>1
