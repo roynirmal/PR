@@ -4,23 +4,25 @@
 %changing number of data
 
 errors={" " ;"svc" ;"qdc"; "parzen" ;"bpxnc"; "loglc"; "knnc"; "treec"};
-% feat = ["hog", "proj", "chain"];
-% nrData = [10, 200, 300, 500, 750, 900];
-% resizeSize = [10, 16, 20]; 
-% resizeMethod = {'bicubic'; 'bilinear'}
-%     % 'nearest'; 'box'; 'triangle'; 'cubic'};
-% % features = [ True, False];
-% nrFeat = [5, 20, 50, 100];
-% featselect = {"featselp"; "featselo"; "none"};
-pca = [false, 0.95, 0.9, 0.85, 0.8] ;
-% 
-nrData = [5, 10];
-resizeSize = [10]; 
-resizeMethod = {'bicubic'};
+%feat = ["hog", "proj", "chain"];
+nrData = [10, 200, 300, 500, 750, 900];
+resizeSize = [10, 16, 20]; 
+resizeMethod = {'bicubic'; 'bilinear'};
+    % 'nearest'; 'box'; 'triangle'; 'cubic'};
 % features = [ True, False];
-nrFeat = [5, 10];
-featselect = {"featselp", "none"};
-pca = [0.95] ;
+nrFeat = [5, 20, 50, 100];
+featselect = {"featselp"; "featselo"; "none"};
+pca = [false, 0.95, 0.9, 0.85, 0.8] ;
+
+
+% % 
+% nrData = [5, 10];
+% resizeSize = [10]; 
+% resizeMethod = {'bicubic'};
+% % features = [ True, False];
+% nrFeat = [5, 10];
+% featselect = {"featselp", "none"};
+% pca = [0.95] ;
 
 
 % %test varying nr Data using pixel representation with thresholding
@@ -64,7 +66,7 @@ pca = [0.95] ;
   for i =1:length(resizeSize)
       for j = 1:length(resizeMethod)
           a = dataPreprocess(resizeSize(i), resizeMethod{j});
-          pr_ds_features = featCoding(a, resizeSize);
+          pr_ds_features = featCoding(a, resizeSize(i));
           for k = 1:length(nrData)
  
                       for n =1:length(featselect)
