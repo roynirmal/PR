@@ -66,39 +66,97 @@ pca = [false, 0.95, 0.9, 0.85, 0.8] ;
   for i =1:length(resizeSize)
       for j = 1:length(resizeMethod)
           a = dataPreprocess(resizeSize(i), resizeMethod{j});
-          pr_ds_features = featCoding(a, resizeSize(i));
+          pr_ds_features = featCoding(a, resizeSize(i), true, false);
           for k = 1:length(nrData)
  
                       for n =1:length(featselect)
                           if(featselect{n} == "none")
-                              eT=classifiersErrors(resizeSize(i), resizeMethod{j}, pr_ds_features, nrData(k), false, true, 0,featselect{n}, 0);
-                              errors=[errors eT(:,2)]; 
-                              eT=classifiersErrors(resizeSize(i), resizeMethod(j), a, nrData(k), false, false, 0,featselect{n}, 0);
-                              errors=[errors eT(:,2)]; 
-                              eT=classifiersErrors(resizeSize(i), resizeMethod(j), a, nrData(k), true, false, 0,featselect{n}, 0);
+                               [trn, tst] = featureReduce(pr_ds_features, nrFeat(m), featselect{n}, nrData(k));
+                             eT=classifiersErrors(resizeSize(i), resizeMethod{j}, pr_ds_features, trn, tst, nrData(k), false, true, 0,featselect{n}, 0);
                               errors=[errors eT(:,2)]; 
                               break;
                           end
                         for m = 1:length(nrFeat)
+                            [trn, tst] = featureReduce(pr_ds_features, nrFeat(m), featselect{n}, nrData(k));
+                            display("1st loop feature Reduce");
                           for o = 1:length(pca)
-                              eT=classifiersErrors(resizeSize(i), resizeMethod{j}, pr_ds_features, nrData(k), false, true, nrFeat(m),featselect{n}, pca(o));
-                              errors=[errors eT(:,2)]; 
-                              eT=classifiersErrors(resizeSize(i), resizeMethod{j}, a, nrData(k), false, false, nrFeat(m),featselect{n}, pca(o));
-                              errors=[errors eT(:,2)]; 
-                              eT=classifiersErrors(resizeSize(i), resizeMethod{j}, a, nrData(k), true, false, nrFeat(m),featselect{n}, pca(o));
-                              errors=[errors eT(:,2)]; 
+                              eT=classifiersErrors(resizeSize(i), resizeMethod{j}, pr_ds_features, trn, tst,  nrData(k), false, true, nrFeat(m),featselect{n}, pca(o));
+                              errors=[errors eT(:,2)];
                               
                           end
                       end
                   end
           end
-          filename = strcat(string(resizeSize(i)), string(resizeMethod{j}));
+          filename = strcat(string(resizeSize(i)), string(resizeMethod{j}), "featureTrueThreshFale");
           filename = sprintf('%s.csv', filename);
           cell2csv(filename ,errors);
           display("File Printed");
       end
   end
   
+  
+   for i =1:length(resizeSize)
+      for j = 1:length(resizeMethod)
+          a = dataPreprocess(resizeSize(i), resizeMethod{j});
+          pr_ds_features = featCoding(a, resizeSize(i), false, true);
+          for k = 1:length(nrData)
+ 
+                      for n =1:length(featselect)
+                          if(featselect{n} == "none")
+                              [trn, tst] = featureReduce(pr_ds_features, nrFeat(m), featselect{n}, nrData(k));
+                              eT=classifiersErrors(resizeSize(i), resizeMethod{j}, a, trn, tst,  nrData(k),  true, false,0,featselect{n}, 0);
+                              errors=[errors eT(:,2)]; 
+                              
+                              break;
+                          end
+                        for m = 1:length(nrFeat)
+                            [trn, tst] = featureReduce(pr_ds_features, nrFeat(m), featselect{n}, nrData(k));
+                            display("2nd loop feature Reduce");
+                          for o = 1:length(pca)
+                              eT=classifiersErrors(resizeSize(i), resizeMethod{j}, a, trn, tst , nrData(k),  true, false, nrFeat(m),featselect{n}, pca(o));
+                              errors=[errors eT(:,2)]; 
+                              
+                          end
+                      end
+                  end
+          end
+          filename = strcat(string(resizeSize(i)), string(resizeMethod{j}), "featureFalseThreshTrue");
+          filename = sprintf('%s.csv', filename);
+          cell2csv(filename ,errors);
+          display("File Printed");
+      end
+   end
+  
+   for i =1:length(resizeSize)
+      for j = 1:length(resizeMethod)
+          a = dataPreprocess(resizeSize(i), resizeMethod{j});
+          pr_ds_features = featCoding(a, resizeSize(i), false, false);
+          for k = 1:length(nrData)
+ 
+                      for n =1:length(featselect)
+                          if(featselect{n} == "none")
+                                [trn, tst] = featureReduce(pr_ds_features, nrFeat(m), featselect{n}, nrData(k));
+                              eT=classifiersErrors(resizeSize(i), resizeMethod{j}, a,  trn, tst,nrData(k), false, false,0,featselect{n}, 0);
+                              errors=[errors eT(:,2)]; 
+                              break;
+                          end
+                        for m = 1:length(nrFeat)
+                            [trn, tst] = featureReduce(pr_ds_features, nrFeat(m), featselect{n}, nrData(k));
+                            display("3nd loop feature Reduce");
+                          for o = 1:length(pca)
+                              eT=classifiersErrors(resizeSize(i), resizeMethod{j}, a, trn, tst,  nrData(k), false, false, nrFeat(m),featselect{n}, pca(o));
+                              errors=[errors eT(:,2)]; 
+                              
+                          end
+                      end
+                  end
+          end
+          filename = strcat(string(resizeSize(i)), string(resizeMethod{j}),"featureFalseThreshFalse");
+          filename = sprintf('%s.csv', filename);
+          cell2csv(filename ,errors);
+          display("File Printed");
+      end
+  end
                               
 %Exporting to CSV to make plots in R.
 % cell2csv("testsPR.csv",errors);

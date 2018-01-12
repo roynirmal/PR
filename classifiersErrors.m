@@ -1,27 +1,24 @@
 % PR assignment 
-function errorTable = classifiersErrors(resizeSize, resizeMethod, pr_ds_features, nrTrObjectsPerClass,thresholding,features, nrFeat,featselect,pca)
+function errorTable = classifiersErrors(resizeSize, resizeMethod, pr_ds_features, trn, tst, nrTrObjectsPerClass,thresholding,features, nrFeat,featselect,pca)
 %preprocessing : resizing all images to same square dimensions
 
-if (thresholding)
-    pr_ds_features=im_threshold(pr_ds_features,'otsu');
-end
 
 
 if (not(features))
-    pr_ds=prdataset(pr_ds_features);
+
 %Training with several classifiers
 %Splitting data - 80% train and 20 % test
 %[trn,tst] = gendat(pr_ds,nrTrObjectsPerClass/1000);
 
-if (featselect =="featselp")
-    [sel,r] = featselp(pr_ds,'maha-s',nrFeat);
-    [trn,tst] = gendat(pr_ds*sel,nrTrObjectsPerClass/1000);
-elseif (featselect == "featselo")
-    [sel,r] =featselo(pr_ds,'maha-s',nrFeat);
-    [trn,tst] = gendat(pr_ds*sel,nrTrObjectsPerClass/1000);
-else   
-[trn,tst] = gendat(pr_ds,nrTrObjectsPerClass/1000);
-end
+% if (featselect =="featselp")
+%     [sel,r] = featselp(pr_ds,'maha-s',nrFeat);
+%     [trn,tst] = gendat(pr_ds*sel,nrTrObjectsPerClass/1000);
+% elseif (featselect == "featselo")
+%     [sel,r] =featselo(pr_ds,'maha-s',nrFeat);
+%     [trn,tst] = gendat(pr_ds*sel,nrTrObjectsPerClass/1000);
+% else   
+% [trn,tst] = gendat(pr_ds,nrTrObjectsPerClass/1000);
+% end
 
 if (pca ~= false)
   sel=scalem([],'variance')*pcam([],pca);
@@ -30,8 +27,8 @@ if (pca ~= false)
   tst = tst*pcaTrained;
 end
 
-    w1 = svc(trn);
-    e1=testc(tst, w1);
+    w1 = svc(trn);  
+   	e1 = testc(tst, w1);
 
     w2 = qdc(trn);
     e2=testc(tst,w2);
@@ -51,8 +48,7 @@ end
     e7 =" NaN";
 %     w7 = treec(trn);
 %     e7 = testc(tst, w7);
- 
-else 
+else
 % % using features
 % %this part to be used when we have our feautures
 % %automatic feature select
@@ -119,15 +115,6 @@ else
 
 
 
-if (featselect =="featselp")
-    [sel,r] = featselp(pr_ds_features,'maha-s',nrFeat);
-    [trn,tst] = gendat(pr_ds_features*sel,nrTrObjectsPerClass/1000);
-elseif (featselect == "featselo")
-    [sel,r] =featselo(pr_ds_features,'maha-s',nrFeat);
-    [trn,tst] = gendat(pr_ds_features*sel,nrTrObjectsPerClass/1000);
-else   
-[trn,tst] = gendat(pr_ds_features,nrTrObjectsPerClass/1000);
-end
 
 if (pca ~= false)
   sel=scalem([],'variance')*pcam([],pca);
