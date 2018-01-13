@@ -153,7 +153,7 @@ pca = [false, 0.95, 0.8] ;
                           end
                       end
                       end
-          filename = strcat(("data",string(nrData(k)),"resizeSize",string(resizeSize(i)),"resizeMethod", string(resizeMethod{j}),"featureFalseThreshFalse");
+          filename = strcat("data",string(nrData(k)),"resizeSize",string(resizeSize(i)),"resizeMethod", string(resizeMethod{j}),"featureFalseThreshFalse");
           filename = sprintf('%s.csv', filename);
           cell2csv(filename ,errors);
           display("File Printed");
