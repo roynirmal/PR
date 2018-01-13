@@ -3,7 +3,6 @@ function errorTable = classifiersErrors(resizeSize, resizeMethod, pr_ds_features
 %preprocessing : resizing all images to same square dimensions
 
 
-
 if (not(features))
 
 %Training with several classifiers

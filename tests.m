@@ -1,18 +1,18 @@
 %Tests
 % errorTable = classifiersErrors(nrTrObjectsPerClass,resizing,resizeSize,resizeMethod,thresholding,features)
-
+warning off;
 %changing number of data
-
+display("Processing initial values");
 errors={" " ;"svc" ;"qdc"; "parzen" ;"bpxnc"; "loglc"; "knnc"; "treec"};
 %feat = ["hog", "proj", "chain"];
-nrData = [10, 200, 300, 500, 750, 900];
-resizeSize = [10, 16, 20]; 
-resizeMethod = {'bicubic'; 'bilinear'};
+nrData = [10, 800];
+resizeSize = [10, 16]; 
+resizeMethod =  {'nearest'; 'box'};
     % 'nearest'; 'box'; 'triangle'; 'cubic'};
 % features = [ True, False];
-nrFeat = [5, 20, 50, 100];
-featselect = {"featselp"; "featselo"; "none"};
-pca = [false, 0.95, 0.9, 0.85, 0.8] ;
+nrFeat = [5, 20, 50];
+featselect = {"featselp"; "none"};
+pca = [false, 0.95, 0.8] ;
 
 
 % % 
@@ -65,10 +65,13 @@ pca = [false, 0.95, 0.9, 0.85, 0.8] ;
   
   for i =1:length(resizeSize)
       for j = 1:length(resizeMethod)
+          display("Processing data");
           a = dataPreprocess(resizeSize(i), resizeMethod{j});
+          display("Retrieving features");
           pr_ds_features = featCoding(a, resizeSize(i), true, false);
+          display("All features retrieved");
           for k = 1:length(nrData)
- 
+                display("Trying a total of some objects");
                       for n =1:length(featselect)
                           if(featselect{n} == "none")
                                [trn, tst] = featureReduce(pr_ds_features, nrFeat(m), featselect{n}, nrData(k));
