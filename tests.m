@@ -5,7 +5,7 @@ warning off;
 display("Processing initial values");
 errors={" " ;"svc" ;"qdc"; "parzen" ;"bpxnc"; "loglc"; "knnc"; "treec"};
 %feat = ["hog", "proj", "chain"];
-nrData = [10, 800];
+nrData = [10,200,500];
 resizeSize = [10, 16]; 
 resizeMethod =  {'nearest'; 'box'};
     % 'nearest'; 'box'; 'triangle'; 'cubic'};
@@ -88,12 +88,12 @@ pca = [false, 0.95, 0.8] ;
                               
                           end
                       end
-                  end
-          end
-          filename = strcat(string(resizeSize(i)), string(resizeMethod{j}), "featureTrueThreshFale");
+                      end
+          filename = strcat("data",string(nrData(k)),"resizeSize",string(resizeSize(i)),"resizeMethod", string(resizeMethod{j}), "featureTrueThreshFale");
           filename = sprintf('%s.csv', filename);
           cell2csv(filename ,errors);
-          display("File Printed");
+          display(strcat(string(nrData(k)),"Objects - File Printed"));
+          end
       end
   end
   
@@ -121,12 +121,12 @@ pca = [false, 0.95, 0.8] ;
                               
                           end
                       end
-                  end
-          end
-          filename = strcat(string(resizeSize(i)), string(resizeMethod{j}), "featureFalseThreshTrue");
+                      end
+          filename = strcat("data",string(nrData(k)),"resizeSize",string(resizeSize(i)),"resizeMethod", string(resizeMethod{j}), "featureFalseThreshTrue");
           filename = sprintf('%s.csv', filename);
           cell2csv(filename ,errors);
-          display("File Printed");
+          display("File Printed");            
+          end
       end
    end
   
@@ -152,12 +152,12 @@ pca = [false, 0.95, 0.8] ;
                               
                           end
                       end
-                  end
-          end
-          filename = strcat(string(resizeSize(i)), string(resizeMethod{j}),"featureFalseThreshFalse");
+                      end
+          filename = strcat(("data",string(nrData(k)),"resizeSize",string(resizeSize(i)),"resizeMethod", string(resizeMethod{j}),"featureFalseThreshFalse");
           filename = sprintf('%s.csv', filename);
           cell2csv(filename ,errors);
           display("File Printed");
+          end
       end
   end
                               
