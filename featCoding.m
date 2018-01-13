@@ -1,6 +1,8 @@
-function pr_ds_features = featCoding(a, resizeSize)
+function pr_ds_features = featCoding(a, resizeSize, feature, thresholding)
 
-          for k = 1 : size(a,1)
+if(feature)
+
+for k = 1 : size(a,1)
     
 c = reshape(+a(k,:), [resizeSize+2 resizeSize+2])' ;
 
@@ -40,4 +42,13 @@ feat_select = prdataset(double(feat_select), label);
 features = im_features(a, a, 'all');
 features1 = [features feat_select];
 pr_ds_features=prdataset(features1);
+
+else
+if (thresholding)
+    a=im_threshold(a,'otsu');
+end
+
+          pr_ds_features=prdataset(a);
+          
+end
 end 
