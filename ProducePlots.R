@@ -18,8 +18,9 @@ ggplot(sumErrorTable.m,aes(x=nrFeatures,y=MeanError,col=Classifier,group=Classif
 
 #Parallel Coordinates Plot
 options(viewer=NULL)
-
-errorTable.PPC=codeAllVariables(erTab)
+#remove nans
+erTabNoNAN=erTab[which(!is.nan(erTab$value)),]
+errorTable.PPC=codeAllVariables(erTabNoNAN)
 p <- errorTable.PPC%>%
   plot_ly(type = 'parcoords',
           line = list(color = ~ClassError,colorscale = 'Jet',
