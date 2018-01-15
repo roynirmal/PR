@@ -5,24 +5,24 @@ warning off;
 display('Processing initial values');
 errors={' ' ;'svc' ;'qdc'; 'parzen' ;'bpxnc'; 'loglc'; 'knnc'; 'treec'};
 %feat = ['hog', 'proj', 'chain'];
+% nrData = [10, 200];
+% resizeSize = [10, 16]; 
+% resizeMethod =  {'bicubic'; 'bilinear'};
+%     % 'nearest'; 'box'; 'triangle'; 'cubic'};
+%  features = [ True, False];
+%  nrFeat = [5, 20, 50];
+%  featselect = {'featselp'; 'none'};
+% pca = [false, 0.95, 0.8] ;
+% % featselect =  {'none1234'};
+
 nrData = [10, 200];
 resizeSize = [10, 16]; 
-resizeMethod =  {'bicubic'; 'bilinear'};
+resizeMethod =  {'bicubic', 'bilinear'};
     % 'nearest'; 'box'; 'triangle'; 'cubic'};
 % features = [ True, False];
 % nrFeat = [5, 20, 50];
-% featselect = {'featselp'; 'none'};
+ featselect =  {'none1234'};
 pca = [false, 0.95, 0.8] ;
-featselect =  {'none1234'};
-
-% nrData = [10];
-% resizeSize = [10]; 
-% resizeMethod =  {'bicubic'};
-%     % 'nearest'; 'box'; 'triangle'; 'cubic'};
-% % features = [ True, False];
-% % nrFeat = [5, 20, 50];
-%  featselect =  {'none1234'};
-% pca = [0.95] ;
 
 
 % % 
@@ -106,7 +106,7 @@ featselect =  {'none1234'};
 %           end
 %       end
 %   end
-  
+%   
   
    for i =1:length(resizeSize)
       for j = 1:length(resizeMethod)
@@ -124,11 +124,13 @@ featselect =  {'none1234'};
           filename = strcat('data',string(nrData(k)),'resizeSize',string(resizeSize(i)),'resizeMethod', string(resizeMethod{j}), 'featureFalseThreshTrue');
           filename = sprintf('%s.csv', filename);
           cell2csv(filename ,errors);
-          display('File Printed');            
+          display('File Printed');    
+          errors={' ' ;'svc' ;'qdc'; 'parzen' ;'bpxnc'; 'loglc'; 'knnc'; 'treec'};
+
           end
       end
    end
-  
+%   
    for i =1:length(resizeSize)
       for j = 1:length(resizeMethod)
           a = dataPreprocess(resizeSize(i), resizeMethod{j});
@@ -146,6 +148,8 @@ featselect =  {'none1234'};
           filename = sprintf('%s.csv', filename);
           cell2csv(filename ,errors);
           display('File Printed');
+          errors={' ' ;'svc' ;'qdc'; 'parzen' ;'bpxnc'; 'loglc'; 'knnc'; 'treec'};
+
           end
       end
   end
