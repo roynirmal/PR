@@ -1,82 +1,105 @@
-setwd("../../Documents/CS_DST/PR/Assignment/PR")
+#setwd("../../Documents/CS_DST/PR/Assignment/PR")
 library(reshape2)
 library(stringr)
 library(ggplot2)
 library(plotly)
-#read errorTable
-errorTable=read.csv("testsPR.csv")
-errorTable.m=melt(errorTable)
 
+#Retrieve all files
+#filename="data10resizeSize10resizeMethodnearestfeatureTrueThreshFale.csv"
 
+####Process an individual file
 #function to retrieve the value of a certain parameter in the experiment (eg. thresholding = true or false)
-extractValueExperiment=function(parameter){
-parameterBit= str_extract(errorTable.m$variable, paste("\\.",parameter,".*(\\.|$)",sep=""))
-parameterBit =gsub(paste("\\.",parameter,"\\.",sep=""),"",parameterBit)
-parameterBit= gsub("\\..*","",parameterBit)
-return(parameterBit)
+extractValueExperiment=function(errorTable.m,parameter){
+  parameterBit= str_extract(errorTable.m$variable, paste("(\\.|^)",parameter,".*(\\.|$)",sep=""))
+  parameterBit =gsub(paste("(\\.|^)",parameter,"\\.",sep=""),"",parameterBit)
+  parameterBit= gsub("\\..*","",parameterBit)
+  return(parameterBit)
 }
 
+processFile = function(filename){
+
+#read errorTable
+errorTable=read.csv(filename)
+errorTable.m=melt(errorTable)
+
 #extract all parameters and create a column for each one of them
-errorTable.m$nrTrObjectsPerClass = as.numeric(extractValueExperiment("nrTrObjectsPerClass"))
-errorTable.m$resizing=extractValueExperiment("resizing")
-errorTable.m$resizeSize=extractValueExperiment("resizeSize")
-errorTable.m$resizeMethod=extractValueExperiment("resizeMethod")
-errorTable.m$thresholding=extractValueExperiment("thresholding")
+errorTable.m[,"nrTrObjectsPerClass"] = as.numeric(extractValueExperiment(errorTable.m,"nrTrObjectsPerClass"))
+errorTable.m["resizeSize"]=extractValueExperiment(errorTable.m,"resizeSize")
+errorTable.m["resizeMethod"]=extractValueExperiment(errorTable.m,"resizeMethod")
+errorTable.m["thresholding"]=extractValueExperiment(errorTable.m,"thresholding")
+errorTable.m["nrFeatures"]=extractValueExperiment(errorTable.m,"nrFeatures")
+errorTable.m["featSelect"]=extractValueExperiment(errorTable.m,"featSelect")
+pca = str_extract(errorTable.m$variable, paste("(\\.|^)","pca",".*",sep=""))
+errorTable.m["pca"]=as.numeric(gsub(".pca.","",pca))
+
+#features
+represent=str_extract(filename, paste("feature.*Thresh",sep=""))
+represent=gsub("(feature|Thresh)","",represent)
+
+if (represent=="True"){
+  errorTable.m["Representation"]="Features"
+}else if (represent =="False"){
+  errorTable.m["Representation"]="Pixels"
+}else if (represent=="Diss"){
+  errorTable.m["Representation"]="Dissimilarity"
+}
 errorTable.m$variable=NULL
+return(errorTable.m)
+}
 
 
 ### Plot variation of classification errors with a certain parameter of Interest
-summariseErrorTable=function(parameterOfInterest,RemainingParameters){
+summariseErrorTable=function(errorTable.m,parameterOfInterest){
   #Group tournaments according to their parameterSet
-  RemainingParameters=c("resizing","resizeSize","resizeMethod","thresholding")
-  parameterSets=unique(errorTable.m[,RemainingParameters])
-  errorTable.m$parameterSet=0
-  subsetTable=errorTable.m[,RemainingParameters]
-  for (i in c(1:nrow(parameterSets))){
-    errorTable.m$parameterSet[which((subsetTable[,1]%in%parameterSets[i,1] & subsetTable[,2]%in%parameterSets[i,2] & subsetTable[,3]%in%parameterSets[i,3] & subsetTable[,4]%in%parameterSets[i,4]))]=i
-  }
+#  RemainingParameters=setdiff(colnames(erTab),c("X","value",parameterOfInterest))
+#  parameterSets=unique(errorTable.m[,RemainingParameters])
+#  errorTable.m$parameterSet=0
+#  subsetTable=errorTable.m[,c(parameterOfInterest)]
+#  parameterSets=unique(subsetTable)
+#  for (i in c(1:length(parameterSets))){
+#    errorTable.m$parameterSet[which((parameterSets[i]==subsetTable))]=i
+#  }
   
 errorTableWithMeanSD=data.frame()
 
 #Compute Conf Intervals for each pair class+parameterSet
-classifiers=c("svc","qdc","parzen","loglc","knnc","bpxnc")
+classifiers=c("svc","qdc","parzen","loglc","knnc","bpxnc","treec")
 paramIntvalues=unique(errorTable.m[,parameterOfInterest])
-parameterSets = unique(errorTable.m[,"parameterSet"])
+#parameterSets = unique(errorTable.m[,"parameterSet"])
 for (classif in classifiers){
-  for (pSet in parameterSets){
-subsetTab=as.data.frame(errorTable.m[which(errorTable.m$X==classif & errorTable.m$parameterSet==pSet),])
-for (p in paramIntvalues) {
-  subsetErrors=subsetTab$value[which(subsetTab[,parameterOfInterest]==p)]
+  for (pSet in paramIntvalues){
+  subsetTab=as.data.frame(errorTable.m[which(errorTable.m$X==classif & errorTable.m[,parameterOfInterest]==pSet),])
+  subsetErrors=subsetTab$value
   sd=sd(subsetErrors)
   m=mean(subsetErrors)
   n = length(subsetErrors)
   ciMultipler = qt(0.975,n-1)
   ci = sd * ciMultipler
-  temp=data.frame(classif,p,pSet,m,sd,n,ci)
+  temp=data.frame(classif,pSet,m,sd,n,ci)
   errorTableWithMeanSD=rbind(errorTableWithMeanSD,temp)
 }
 }
-}
-colnames(errorTableWithMeanSD)= c("Classifier", parameterOfInterest,"ParameterSet","MeanError","SD","N","Cint")
+colnames(errorTableWithMeanSD)= c("Classifier", parameterOfInterest,"MeanError","SD","N","Cint")
 return(errorTableWithMeanSD)
 }
 
-sumErrorTable.m = summariseErrorTable("nrTrObjectsPerClass",c("resizing","resizeSize","resizeMethod","thresholding"))
+#sumErrorTable.m = summariseErrorTable("nrTrObjectsPerClass",c("resizeSize","resizeMethod","thresholding"))
 #plot - effect of data size on classification error
-pd <- position_dodge(0.2) # move them .05 to the left and right
+#pd <- position_dodge(0.2) # move them .05 to the left and right
 
-ggplot(sumErrorTable.m,aes(x=nrTrObjectsPerClass,y=MeanError,col=Classifier,group=interaction(ParameterSet,Classifier)))+geom_line(size=1,position=pd) +geom_errorbar(aes(ymin=MeanError-Cint, ymax=MeanError+Cint), width=.1,position=pd)+theme_bw()
+#ggplot(sumErrorTable.m,aes(x=nrTrObjectsPerClass,y=MeanError,col=Classifier,group=interaction(ParameterSet,Classifier)))+geom_line(size=1,position=pd) +geom_errorbar(aes(ymin=MeanError-Cint, ymax=MeanError+Cint), width=.1,position=pd)+theme_bw()
 
-## Parallel Coordinates Plot
-colnames(errorTable.m) [c(1,2)] = c("Classifier","ClassError")
+
+## Parallel Coordinates Plot ##
+
 #binary features coded as 0 or 1
 codeBinary=function(tab,parameter){
   tab[,parameter][which(tab[,parameter]=="true")]=1
   tab[,parameter][which(tab[,parameter]=="false")]=0
+  tab[,parameter]=as.numeric(tab[,parameter])
   return(tab)
   }
-errorTable.m=codeBinary(errorTable.m,"thresholding")
-errorTable.m=codeBinary(errorTable.m,"resizing")
+
 
 #same for features with several categories
 codeOrdinal=function(tab,parameter,options,codes){
@@ -84,28 +107,19 @@ codeOrdinal=function(tab,parameter,options,codes){
   for (i in c(1:length(options))){
     tab[,parameter][which(tab[,parameter]==options[i])]=codes[i]
   }
+  tab[,parameter]=as.numeric(tab[,parameter])
   return(tab)
 }
-errorTable.m=codeOrdinal(errorTable.m,"resizeMethod","bicubic",1)
-errorTablePPC=codeOrdinal(errorTable.m,"Classifier",c("svc","qdc","parzen","bpxnc","knnc","loglc"),c(1,2,3,4,5,6))
+#Code all variables
+codeAllVariables=function(errorTable.m){
+errorTable.PPC=errorTable.m
+colnames(errorTable.PPC) [c(1,2)] = c("Classifier","ClassError")
+errorTable.PPC=codeBinary(errorTable.PPC,"thresholding")
+errorTable.PPC=codeOrdinal(errorTable.PPC,"resizeMethod",c("bicubic","nearest","box"),c(1,2,3))
+errorTable.PPC=codeOrdinal(errorTable.PPC,"Classifier",c("svc","qdc","parzen","bpxnc","knnc","loglc","treec"),c(1,2,3,4,5,6,7))
+errorTable.PPC=codeOrdinal(errorTable.PPC,"Representation",c("Pixels","Features","Dissimilarity"),c(1,2,3))
+
+return(errorTable.PPC)
+}
 
 #options(viewer=NULL) # need this option because plotly doesnt plot well on Rstudio. This makes plotly plot to appear on a browser
-
-#color legend is missing, it has to be added afterwards.
-p <- errorTablePPC %>%
-  plot_ly(type = 'parcoords',
-          line = list(color = ~Classifier,colorscale = list(c(0,'red'),c(0.2,'green'),c(0.4,'darkblue'),c(0.6,"orange"),c(0.8,"purple"),c(1,"darkturquoise")) ),
-          dimensions = list(
-            list(range = c(0,30),
-                 label = 'No.Objects Per Class', values = ~nrTrObjectsPerClass),
-            list(range = c(0,1),
-                 label = 'Resizing', values = ~resizing),
-            list(range = c(7,10),
-                 label = 'Resize Size', values = ~resizeSize),
-            list(range = c(0,1),
-                 label = 'ResizeMethod', values = ~resizeMethod),
-            list(range = c(0,1),
-                 label = 'Thresholding', values = ~thresholding),
-            list(range=c(0,1),  constraintrange = c(0,1), label='Classification Error',values=~ClassError)
-          )        
-  )

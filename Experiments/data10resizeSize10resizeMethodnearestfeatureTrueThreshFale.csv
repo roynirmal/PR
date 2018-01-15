@@ -1,0 +1,8 @@
+ , nrTrObjectsPerClass:10 resizeSize:10 resizeMethod:nearest thresholding:false nrFeatures:5 featSelect:featselp pca:0, nrTrObjectsPerClass:10 resizeSize:10 resizeMethod:nearest thresholding:false nrFeatures:5 featSelect:featselp pca:0.95, nrTrObjectsPerClass:10 resizeSize:10 resizeMethod:nearest thresholding:false nrFeatures:5 featSelect:featselp pca:0.8, nrTrObjectsPerClass:10 resizeSize:10 resizeMethod:nearest thresholding:false nrFeatures:20 featSelect:featselp pca:0, nrTrObjectsPerClass:10 resizeSize:10 resizeMethod:nearest thresholding:false nrFeatures:20 featSelect:featselp pca:0.95, nrTrObjectsPerClass:10 resizeSize:10 resizeMethod:nearest thresholding:false nrFeatures:20 featSelect:featselp pca:0.8, nrTrObjectsPerClass:10 resizeSize:10 resizeMethod:nearest thresholding:false nrFeatures:50 featSelect:featselp pca:0, nrTrObjectsPerClass:10 resizeSize:10 resizeMethod:nearest thresholding:false nrFeatures:50 featSelect:featselp pca:0.95, nrTrObjectsPerClass:10 resizeSize:10 resizeMethod:nearest thresholding:false nrFeatures:50 featSelect:featselp pca:0.8, nrTrObjectsPerClass:10 resizeSize:10 resizeMethod:nearest thresholding:false nrFeatures:0 featSelect:none pca:0
+svc,0.73515,0.50303,0.54232,0.50848,0.27939,0.23111,0.32677,0.21424,0.26586,0.32263
+qdc,0.50475,0.50475,0.51131,0.67606,0.5204,0.60152,0.61091,0.7003,0.55475,0.9
+parzen,0.49071,0.47566,0.4798,0.64667,0.20707,0.21455,0.59727,0.24747,0.27273,0.9
+bpxnc,0.54535,0.55364,0.58626,0.33242,0.43626,0.33162,0.30949,0.39111,0.38929,0.31101
+loglc,0.45576,0.45576,0.47182,0.25909,0.31606,0.33808,0.2802,0.24919,0.28404,0.34253
+knnc,0.50232,0.49828,0.49576,0.60404,0.24939,0.24232,0.53384,0.27212,0.29545,0.5501
+treec,0.69333,0.68434,0.68434,0.75505,0.58556,0.58556,0.65697,0.67818,0.67818,0.69899
