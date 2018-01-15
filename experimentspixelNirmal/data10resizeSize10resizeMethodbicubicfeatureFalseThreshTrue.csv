@@ -1,0 +1,8 @@
+ , nrTrObjectsPerClass:10 resizeSize:10 resizeMethod:bicubic thresholding:true nrFeatures:0 featSelect:0 pca:0, nrTrObjectsPerClass:10 resizeSize:10 resizeMethod:bicubic thresholding:true nrFeatures:0 featSelect:0 pca:0.95, nrTrObjectsPerClass:10 resizeSize:10 resizeMethod:bicubic thresholding:true nrFeatures:0 featSelect:0 pca:0.8
+svc,0.35788,0.30838,0.33313
+qdc,0.9,0.88737,0.74586
+parzen,0.31232,0.35141,0.33242
+bpxnc,0.54465,0.52586,0.57455
+loglc,0.82778,0.41879,0.35212
+knnc,0.32283,0.34051,0.32313
+treec, NaN, NaN, NaN
