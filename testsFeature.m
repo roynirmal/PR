@@ -103,6 +103,7 @@ pca = [false, 0.95, 0.8] ;
           filename = sprintf('%s.csv', filename);
           cell2csv(filename ,errors);
           display(strcat(string(nrData(k)),'Objects - File Printed'));
+          errors={' ' ;'svc' ;'qdc'; 'parzen' ;'bpxnc'; 'loglc'; 'knnc'; 'treec'};
           end
       end
   end
