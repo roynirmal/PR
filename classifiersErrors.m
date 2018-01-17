@@ -90,7 +90,7 @@ else
 %        
 %        
        
-% % manual feature select which uses featureSelect functio    
+% % manual feature select which uses featureSelect functio     
 % pr_ds_feat = featureSelect(true, true, true);
 % [trn,tst] = gendat(pr_ds_feat,0.8);
 % w1 = svc(trn);
@@ -141,13 +141,13 @@ w6 = knnc(trn);
 e6=testc(tst,w6);
 
 
-w7 = treec(trn);
+w7 = fisherc(trn);
 e7 = testc(tst, w7);
 end
 
 %Producing output error table
 errorTable=cell(8,2);
-class =["svc" "qdc" "parzen" "bpxnc" "loglc" "knnc" "treec"];
+class =["svc" "qdc" "parzen" "bpxnc" "loglc" "knnc" "fisherc"];
 errors = [strcat( " nrTrObjectsPerClass:",string(nrTrObjectsPerClass)," resizeSize:",string(resizeSize)," resizeMethod:",string(resizeMethod)," thresholding:",string(thresholding)," nrFeatures:",string(nrFeat)," featSelect:",string(featselect)," pca:",string(pca)) e1 e2 e3 e4 e5 e6 e7];
 for i=1:8
     errorTable{i,2}=errors(i);
