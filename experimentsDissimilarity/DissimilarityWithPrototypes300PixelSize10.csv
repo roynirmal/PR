@@ -1,0 +1,8 @@
+classifier, distanceminkowski prototypes10 training300, distancepolynomial prototypes10 training300, distancedistance prototypes10 training300, distancecosine prototypes10 training300, distanceminkowski prototypes50 training300, distancepolynomial prototypes50 training300, distancedistance prototypes50 training300, distancecosine prototypes50 training300, distanceminkowski prototypes100 training300, distancepolynomial prototypes100 training300, distancedistance prototypes100 training300, distancecosine prototypes100 training300, distanceminkowski prototypes150 training300, distancepolynomial prototypes150 training300, distancedistance prototypes150 training300, distancecosine prototypes150 training300, distanceminkowski prototypes200 training300, distancepolynomial prototypes200 training300, distancedistance prototypes200 training300, distancecosine prototypes200 training300
+svc,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+qdc,0.049286,0.086429,0.049286,0.079571,0.76229,0.88829,0.18614,0.88843,0.9,0.89286,0.755,0.89271,0.9,0.89629,0.82643,0.89657,0.9,0.9,0.9,0.9
+parzen,0.072571,0.081714,0.062857,0.047,0.9,0.9,0.067143,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9
+bpxnc,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+loglc,0.594,0.43386,0.74571,0.72357,0.13014,0.12457,0.039857,0.40243,0.14543,0.66157,0.040857,0.60214,0.14614,0.61657,0.028571,0.43557,0.15843,0.12614,0.029286,0.11214
+knnc,0.076571,0.086286,0.069714,0.049857,0.067857,0.090143,0.067857,0.052143,0.065286,0.078714,0.068571,0.057714,0.065714,0.086429,0.070429,0.052571,0.064143,0.082571,0.063571,0.048857
+fisher,0.12,0.13729,0.084571,0.12614,0.097,0.13457,0.041857,0.12214,0.10729,0.13886,0.034,0.12214,0.109,0.12743,0.032714,0.115,0.11829,0.127,0.030714,0.11771
