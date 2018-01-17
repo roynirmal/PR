@@ -116,10 +116,13 @@ else
 
 
 if (pca ~= false)
-  sel=scalem([],'variance')*pcam([],pca);
-  pcaTrained=trn*sel;
+    [w, n] = pcam(trn,pca);
+ pcaTrained=scalem(trn,'variance')*w;
+%  pcaTrained=trn*sel;
   trn = trn*pcaTrained;
   tst = tst*pcaTrained;
+else
+    n=0;
 end
 
 w1 = svc(trn); 
@@ -148,7 +151,7 @@ end
 %Producing output error table
 errorTable=cell(8,2);
 class =["svc" "qdc" "parzen" "bpxnc" "loglc" "knnc" "fisherc"];
-errors = [strcat( " nrTrObjectsPerClass:",string(nrTrObjectsPerClass)," resizeSize:",string(resizeSize)," resizeMethod:",string(resizeMethod)," thresholding:",string(thresholding)," nrFeatures:",string(nrFeat)," featSelect:",string(featselect)," pca:",string(pca)) e1 e2 e3 e4 e5 e6 e7];
+errors = [strcat( " nrTrObjectsPerClass:",string(nrTrObjectsPerClass)," resizeSize:",string(resizeSize)," resizeMethod:",string(resizeMethod)," thresholding:",string(thresholding)," nrFeatures:",string(nrFeat)," featSelect:",string(featselect)," pca:",string(pca), " pcadimension:", string(n)) e1 e2 e3 e4 e5 e6 e7];
 for i=1:8
     errorTable{i,2}=errors(i);
     if i>1
