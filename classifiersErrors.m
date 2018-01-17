@@ -20,10 +20,13 @@ if (not(features))
 % end
 
 if (pca ~= false)
-  sel=scalem([],'variance')*pcam([],pca);
-  pcaTrained=trn*sel;
+    [w, n] = pcam(trn,pca);
+ pcaTrained=scalem(trn,'variance')*w;
+%  pcaTrained=trn*sel;
   trn = trn*pcaTrained;
   tst = tst*pcaTrained;
+else
+    n=0;
 end
 
     w1 = svc(trn);  
