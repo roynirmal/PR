@@ -32,19 +32,19 @@ p <- errorTable.PPC%>%
             list(range = c(0,250),
                  label = 'No.Objects Per Class', values = ~nrTrObjectsPerClass),
             list(range = c(0,3),
-                 label = 'Representation', values = ~Representation),
+                 label = 'Representation', values = ~Representation,tickvals = c(1,2,3),ticktext = c("Pixels","Features","Dissimilarity")),
             list(range = c(0,5),
-                 label = 'Resize Method', values = ~resizeMethod),
+                 label = 'Resize Method', values = ~resizeMethod,tickvals = c(1,2,3,4),ticktext = c("bicubic","bilinear","nearest","box")),
             list(range = c(0,18),
                  label = 'Resize Size', values = ~resizeSize),
             list(range = c(0,1),
-                 label = 'Thresholding', values = ~jitter(thresholding)),
+                 label = 'Thresholding', values = ~jitter(thresholding),tickvals = c(0,1),ticktext =c("False","True")),
             list(range = c(0,100),
                  label = 'No.Features', values = ~nrFeatures),
             list(range = c(0,1),
                  label = 'PCA', values = ~pca),
             list(range = c(1,8),
-                 label = 'Classifiers', values = ~Classifier),
+                 label = 'Classifiers', values = ~Classifier,tickvals = c(1,2,3,4,5,6,7),ticktext = c("svc","qdc","parzen","bpxnc","knnc","loglc","treec")),
             list(range=c(0,0.3),  constraintrange = c(0,0.05), label='Classification Error',values=~ClassError)
           )
   )
