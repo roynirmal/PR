@@ -105,25 +105,31 @@ end
 
 %% Automated version - all training different from representatives - Scenario 1
 
-pixSize=[10];
+pixSize=[8];
 for pix=1:length(pixSize)
 a=dataPreprocess(pixSize(pix),'bicubic');
 pr_ds=prdataset(a);
 
-nrRep = [10 50 100 150 200];
-nrRepMatrix=zeros(5,10);
+nrData = [400 500 600];
+
+errorTable ={"classifier" ;"svc"; "qdc"; "parzen"; "bpxnc"; "loglc"; "knnc"; "fisher"};
+distmeasures = {'minkowski', 'polynomial','distance','cosine'};
+for i=1:length(nrData)
+        display(strcat("i ",string(nrData(i))));
+        
+prot=nrData(i)/100;
+nrRep=zeros(1,prot-2);
+for k=1:(prot-2)
+    nrRepMatrix=zeros(prot-2,10);
+    nrRep(k)=200+k*100;
+end
+
 for rep = 1:length(nrRep)
 for cl=1:10
     nrRepMatrix(rep,cl) = nrRep(rep);
 end
 end
 
-nrData = [400 500];
-
-errorTable ={"classifier" ;"svc"; "qdc"; "parzen"; "bpxnc"; "loglc"; "knnc"; "fisher"};
-distmeasures = {'minkowski', 'polynomial','distance','cosine'};
-for i=1:length(nrData)
-        display(strcat("i ",string(nrData(i))));
 for j=1:length(nrRep)  
         display(strcat("j ",string(nrRep(j))));
 [trn,tst] = gendat(pr_ds,nrData(i)/1000);
@@ -161,7 +167,7 @@ for di =1:length(distmeasures)
     errorTable=[errorTable errors];
 end
 end
-filename = strcat("DissimilarityWithPrototypes",string(nrData(i)),"PixelSize",string(pixSize(pix)));
+filename = strcat("DissimilarityWithMorePrototypes",string(nrData(i)),"PixelSize",string(pixSize(pix)));
 filename = sprintf('%s.csv', filename);
 cell2csv(filename ,errorTable);
 errorTable ={"classifier" ;"svc"; "qdc"; "parzen"; "bpxnc"; "loglc"; "knnc"; "fisher"};
@@ -274,3 +280,40 @@ end
 filename = strcat("DissimilarityWithPrototypesScenario2PixelSize6MethodBicubicOnlySVC");
 filename = sprintf('%s.csv', filename);
 cell2csv(filename ,errorTable);
+
+%%Try different svc - scenario1 
+ a=dataPreprocess(8,'bicubic');
+ pr_ds=prdataset(a);
+ errorTable ={"classifier" ;"svc"; "rbsvc"; "pksvc";"svcfish"};
+
+ distmeasures = {'minkowski', 'polynomial','distance','cosine','ndiff','sigmoid','radial_basis'};
+ nrRepetitions=1;
+ for di =1:length(distmeasures)
+     for i=1:nrRepetitions
+        [trn,tst] = gendat(pr_ds,0.5); %Scenario 1
+        dist = distmeasures{di};
+
+        w=proxm(gendat(trn,500),dist);
+        d=trn*w;
+    
+    
+        w1=bpxnc(d); %training in the dissimilarity space nmc, fisherc
+        e1=testc(tst*w,w1);
+        
+        w2=rbsvc(d); %training in the dissimilarity space nmc, fisherc
+        e2=testc(tst*w,w2);
+        
+        w3=pksvc(d); %training in the dissimilarity space nmc, fisherc
+        e3=testc(tst*w,w3);
+        
+        w4=d*(svc*fisherc); %training in the dissimilarity space nmc, fisherc
+        e4=testc(tst*w,w4);
+        errCol = {strcat(" distance",dist," rep",string(i)," prototypes",string(10)," training",string(10)); e1;e2;e3;e4};
+        errorTable=[errorTable errCol];
+
+     end
+ end
+filename = strcat("DissimilarityWithPrototypesScenario2PixelSize6MethodBicubicOnlySVC");
+filename = sprintf('%s.csv', filename);
+cell2csv(filename ,errorTable);
+

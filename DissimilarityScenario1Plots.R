@@ -66,3 +66,11 @@ p <- errorTable.PPC%>%
             list(range=c(0,0.1),  constraintrange = c(0,0.05), label='Classification Error',values=~ClassifError)
           )
   )
+
+
+#Influence of Prototypes and Representatives
+#opt conditions size =8, dist = distance
+optTable=AllFilesTab[which(AllFilesTab$ResizeSize==8&AllFilesTab$Distance=="distance"),]
+optClassifiers=c("loglc","fisher","knnc")
+optTable=optTable[which(optTable$Classifier%in%optClassifiers==TRUE),]
+ggplot(optTable,aes(x=Prototypes,y=ClassifError,group=interaction(Training,Classifier),col=interaction(Training,Classifier)))+geom_line(size=1) +ylim(c(0,0.05))+theme_bw()
