@@ -1,0 +1,11 @@
+ ; nrTrObjectsPerClass:200 resizeSize:16 resizeMethod:bicubic thresholding:false nrFeatures:100 featSelect:featselp pca:0.95 pcadimension:0; nrTrObjectsPerClass:200 resizeSize:16 resizeMethod:bicubic thresholding:false nrFeatures:0 featSelect:0 pca:0 pcadimension:0; nrTrObjectsPerClass:200 resizeSize:16 resizeMethod:bicubic thresholding:false nrFeatures:0 featSelect:0 pca:0.95 pcadimension:4
+rbsvc;0.11108;0.077875;0.4005
+svc*fishercc;0.10188;0.072375;0.3925
+ pksvc;0.11;0.064875;0.5535
+svc;0.050625;0.055;0.80825
+NN[4 4];0.04975;0.32775;0.83975
+NN[8 8];0.14788;0.061;0.56575
+NN[16 16];0.047625;0.0245;0.35175
+NN[8 8 8];0.0235;0.0425;0.54737
+NN[12 12 12];0.15613;0.030375;0.40537
+NN[];0.0295;0.88687;0.35825
