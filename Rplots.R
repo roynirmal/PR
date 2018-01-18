@@ -29,8 +29,8 @@ errorTable.m["resizeMethod"]=extractValueExperiment(errorTable.m,"resizeMethod")
 errorTable.m["thresholding"]=extractValueExperiment(errorTable.m,"thresholding")
 errorTable.m["nrFeatures"]=extractValueExperiment(errorTable.m,"nrFeatures")
 errorTable.m["featSelect"]=extractValueExperiment(errorTable.m,"featSelect")
-pca = str_extract(errorTable.m$variable, paste("(\\.|^)","pca",".*",sep=""))
-errorTable.m["pca"]=as.numeric(gsub(".pca.","",pca))
+pca = str_extract(errorTable.m$variable, paste("(\\.|(^|(.)pca))","pca",".*",sep=""))
+errorTable.m["pca"]=as.numeric(gsub(".pca.|.pcadim.*","",pca))
 
 #features
 represent=str_extract(filename, paste("feature.*Thresh",sep=""))

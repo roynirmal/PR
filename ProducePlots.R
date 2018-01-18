@@ -27,7 +27,7 @@ p <- errorTable.PPC%>%
                       showscale = TRUE,
                       reversescale = TRUE,
                       cmin = 0,
-                      cmax = 1),
+                      cmax = 0.3),
           dimensions = list(
             list(range = c(0,250),
                  label = 'No.Objects Per Class', values = ~nrTrObjectsPerClass),
@@ -35,16 +35,16 @@ p <- errorTable.PPC%>%
                  label = 'Representation', values = ~Representation),
             list(range = c(0,5),
                  label = 'Resize Method', values = ~resizeMethod),
-            list(range = c(0,15),
+            list(range = c(0,18),
                  label = 'Resize Size', values = ~resizeSize),
             list(range = c(0,1),
-                 label = 'Thresholding', values = ~thresholding),
+                 label = 'Thresholding', values = ~jitter(thresholding)),
             list(range = c(0,100),
                  label = 'No.Features', values = ~nrFeatures),
             list(range = c(0,1),
                  label = 'PCA', values = ~pca),
             list(range = c(1,8),
                  label = 'Classifiers', values = ~Classifier),
-            list(range=c(0,1),  constraintrange = c(0,0.25), label='Classification Error',values=~ClassError)
+            list(range=c(0,0.3),  constraintrange = c(0,0.05), label='Classification Error',values=~ClassError)
           )
   )
