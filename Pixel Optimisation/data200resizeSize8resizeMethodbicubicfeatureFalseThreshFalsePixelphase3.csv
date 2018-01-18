@@ -1,0 +1,10 @@
+ , nrTrObjectsPerClass:200 resizeSize:8 resizeMethod:bicubic thresholding:false nrFeatures:0 featSelect:0 pca:0.95 pcadimension:37
+rbsvc,0.033125
+pksvc,0.03125
+svc,0.095625
+NN[4 4],0.9
+NN[8 8],0.21338
+NN[16 16],0.15575
+NN[8 8 8],0.16587
+NN[12 12 12],0.099875
+NN[],0.066125
