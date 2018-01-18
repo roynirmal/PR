@@ -43,7 +43,7 @@ summariseRepetitions2Distances=function(tab,method,size){
   distmeasures=c("minkowski","polynomial","distance","cosine","radial_basis")
   combinations=combn(distmeasures,2)
   errorTableWithMeanSD=data.frame()
-  classifiers=c("svc","qdc","parzen","loglc","knnc","bpxnc","fisher")
+  classifiers=c("svc","rbsvc","pksvc","qdc","parzen","loglc","knnc","bpxnc","fisher")
   for (classif in classifiers){
     for (dist in c(1:ncol(combinations))){
       dist1=combinations[1,dist]
