@@ -1,0 +1,8 @@
+ , nrTrObjectsPerClass:200 resizeSize:8 resizeMethod:bicubic thresholding:false nrFeatures:0 featSelect:0 pca:0 pcadimension:0, nrTrObjectsPerClass:200 resizeSize:8 resizeMethod:bicubic thresholding:false nrFeatures:0 featSelect:0 pca:0.95 pcadimension:37, nrTrObjectsPerClass:200 resizeSize:8 resizeMethod:bicubic thresholding:false nrFeatures:0 featSelect:0 pca:0.8 pcadimension:18
+svc,0.12487,0.093875,0.11338
+qdc,0.079375,0.04775,0.047125
+parzen,0.04975,0.05375,0.058
+bpxnc,0.39025,0.37525,0.2775
+loglc,0.52512,0.10113,0.111
+knnc,0.051875,0.057125,0.06025
+fisherc, NaN, NaN, NaN
