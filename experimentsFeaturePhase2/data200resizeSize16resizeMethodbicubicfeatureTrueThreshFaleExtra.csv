@@ -1,0 +1,8 @@
+ , nrTrObjectsPerClass:200 resizeSize:16 resizeMethod:bicubic thresholding:false nrFeatures:0 featSelect:0 pca:0.95 pcadimension:3, nrTrObjectsPerClass:200 resizeSize:16 resizeMethod:bicubic thresholding:false nrFeatures:0 featSelect:0 pca:0.8 pcadimension:2
+svc,0.749,0.80875
+qdc,0.536,0.705
+parzen,0.48313,0.67225
+bpxnc,0.47963,0.66025
+loglc,0.57925,0.72375
+knnc,0.48413,0.67388
+fisherc,0.62138,0.74213
