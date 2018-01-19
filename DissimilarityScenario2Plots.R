@@ -3,6 +3,7 @@ library(dplyr)
 library(stringr)
 
 files=list.files()
+files=files[-grep("Combinations",files)]
 AllFilesTab=data.frame()
 
 for (file in files){
@@ -15,9 +16,10 @@ for (file in files){
   AllFilesTab=rbind(AllFilesTab,summaryTab)
 }
 
-pd <- position_dodge(0.2) # move them .05 to the left and right
+pd <- position_dodge(0.3) # move them .05 to the left and right
 
-ggplot(AllFilesTab,aes(x=dist,y=m,col=classif))+geom_line(size=1,position=pd) +geom_errorbar(aes(ymin=m-ci, ymax=m+ci), width=.1,position=pd)+theme_bw()+xlab("Dissimilarity Measure")+ylab("Classification Error")
+AllFilesTabBicubic=AllFilesTab[which(AllFilesTab$method=="Bicubic"),]
+ggplot(AllFilesTabBicubic,aes(x=dist,y=m,col=classif))+geom_line(size=1,position=pd) +geom_boxplot()+theme_bw()+xlab("Dissimilarity Measure")+ylab("Classification Error")
 
 
 summariseRepetitions=function(tab,method,size){
@@ -64,3 +66,26 @@ summariseRepetitions2Distances=function(tab,method,size){
       errorTableWithMeanSD=rbind(errorTableWithMeanSD,temp)
     }}
   return(errorTableWithMeanSD)}
+
+errorTable.PPC=codeOrdinal(AllFilesTab,"Classifier",c("svc","qdc","parzen","bpxnc","knnc","loglc","fisher","treec"),c(1,2,3,4,5,6,7,8))
+errorTable.PPC=codeOrdinal(errorTable.PPC,"Distance",c("minkowski","distance","polynomial","cosine"),c(1,2,3,4))
+
+p <- errorTable.PPC%>%
+  plot_ly(type = 'parcoords',
+          line = list(color = ~ClassifError,colorscale = 'Jet',
+                      showscale = TRUE,
+                      reversescale = TRUE,
+                      cmin = 0,
+                      cmax = 0.1),
+          dimensions = list(
+            list(range = c(0,600),
+                 label = 'No.Training', values = ~Training),
+            list(range = c(0,20),
+                 label = 'Resize Size', values = ~ResizeSize),
+            list(range = c(0,500),
+                 label = 'Prototypes', values = ~Prototypes),
+            list(range = c(1,8),
+                 label = 'Classifiers', values = ~Classifier),
+            list(range=c(0,0.1),  constraintrange = c(0,0.05), label='Classification Error',values=~ClassifError)
+          )
+  )

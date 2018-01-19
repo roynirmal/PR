@@ -116,7 +116,7 @@ errorTable.PPC=errorTable.m
 colnames(errorTable.PPC) [c(1,2)] = c("Classifier","ClassError")
 errorTable.PPC=codeBinary(errorTable.PPC,"thresholding")
 errorTable.PPC=codeOrdinal(errorTable.PPC,"resizeMethod",c("bicubic","bilinear","nearest","box"),c(1,2,3,4))
-errorTable.PPC=codeOrdinal(errorTable.PPC,"Classifier",c("svc","qdc","parzen","bpxnc","knnc","loglc","treec"),c(1,2,3,4,5,6,7))
+errorTable.PPC=codeOrdinal(errorTable.PPC,"Classifier",c("svc","qdc","parzen","bpxnc","knnc","loglc","treec","fisherc"),c(1,2,3,4,5,6,7,8))
 errorTable.PPC=codeOrdinal(errorTable.PPC,"Representation",c("Pixels","Features","Dissimilarity"),c(1,2,3))
 
 return(errorTable.PPC)
