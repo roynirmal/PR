@@ -3,16 +3,6 @@
 files=list.files()
 AllFilesTab=data.frame()
 
-for (file in files){
-  tab=read.csv(file)
-  size=str_extract(file,"Size.*(.)csv")
-  size=gsub("(Size|(.)csv)","",size)
-  training=str_extract(file,"Prototypes.*PixelSize")
-  training=gsub("(Prototypes|PixelSize)","",training)
-  summaryTab=meltDissScen1(tab,training,size)
-  AllFilesTab=rbind(AllFilesTab,summaryTab)
-}
-
 meltDissScen1=function(tab,training,size){
   distmeasures=c("minkowski","polynomial","distance","cosine")
   errorTable=data.frame()
@@ -44,7 +34,21 @@ codeOrdinal=function(tab,parameter,options,codes){
   return(tab)
 }
 
-errorTable.PPC=codeOrdinal(AllFilesTab,"Classifier",c("svc","qdc","parzen","bpxnc","knnc","loglc","fisher","treec"),c(1,2,3,4,5,6,7,8))
+for (file in files){
+  tab=read.csv(file,stringAsFactors=FALSE)
+  size=str_extract(file,"Size.*(.)csv")
+  size=gsub("(Size|(.)csv)","",size)
+  training=str_extract(file,"Prototypes.*PixelSize")
+  training=gsub("(Prototypes|PixelSize)","",training)
+  summaryTab=meltDissScen1(tab,training,size)
+  AllFilesTab=rbind(AllFilesTab,summaryTab)
+}
+
+AllFilesTabNoSVCBP=AllFilesTab[which(AllFilesTab$Classifier!="svc" &AllFilesTab$Classifier!="bpxnc"&AllFilesTab$Prototypes%in%c(20,30,40,60,70,80,90)==FALSE),]
+AllFilesTabNoSVCBP$Training=as.numeric(as.character(AllFilesTabNoSVCBP$Training))
+AllFilesTabNoSVCBP$ResizeSize=as.numeric(as.character(AllFilesTabNoSVCBP$ResizeSize))
+
+errorTable.PPC=codeOrdinal(AllFilesTabNoSVCBP,"Classifier",c("qdc","parzen","knnc","loglc","fisher"),c(1,2,3,4,5))
 errorTable.PPC=codeOrdinal(errorTable.PPC,"Distance",c("minkowski","distance","polynomial","cosine"),c(1,2,3,4))
 
 p <- errorTable.PPC%>%
@@ -52,20 +56,22 @@ p <- errorTable.PPC%>%
           line = list(color = ~ClassifError,colorscale = 'Jet',
                       showscale = TRUE,
                       reversescale = TRUE,
-                      cmin = 0,
-                      cmax = 0.1),
+                      cmin = min(errorTable.PPC$ClassifError),
+                      cmax = 0.05),
           dimensions = list(
-            list(range = c(0,600),
-                 label = 'No.Training', values = ~Training),
+            list(range = c(0,650),
+                 label = 'No.Training', values = ~jitter(as.numeric(Training))),
             list(range = c(0,20),
-                 label = 'Resize Size', values = ~ResizeSize),
+                 label = 'Resize Size', values = ~jitter(as.numeric(ResizeSize))),
             list(range = c(0,500),
-                 label = 'Prototypes', values = ~Prototypes),
-            list(range = c(1,8),
-                 label = 'Classifiers', values = ~Classifier),
-            list(range=c(0,0.1),  constraintrange = c(0,0.05), label='Classification Error',values=~ClassifError)
+                 label = 'Prototypes', values = ~jitter(Prototypes)),
+            list(range = c(1,4),
+                 label = 'Dissimilarity Measure', values = ~jitter(Distance),tickvals = c(1,2,3,4),ticktext = c("minkowski","euclidean","polynomial","cosine")),
+            list(range = c(0,6),
+                 label = 'Classifiers', values = ~jitter(Classifier),tickvals = c(1,2,3,4,5),ticktext = c("qdc","parzen","knnc","loglc","fisher")),
+            list(range=c(0,1),  constraintrange = c(0,0.05), label='Classification Error',values=~ClassifError)
           )
-  )
+  )%>%   layout(font=list(size=19,color = "#000000"))
 
 
 #Influence of Prototypes and Representatives
@@ -74,3 +80,9 @@ optTable=AllFilesTab[which(AllFilesTab$ResizeSize==8&AllFilesTab$Distance=="dist
 optClassifiers=c("loglc","fisher","knnc")
 optTable=optTable[which(optTable$Classifier%in%optClassifiers==TRUE),]
 ggplot(optTable,aes(x=Prototypes,y=ClassifError,group=interaction(Training,Classifier),col=interaction(Training,Classifier)))+geom_line(size=1) +ylim(c(0,0.05))+theme_bw()
+
+ggplot(AllFilesTabNoSVCBP,aes(x=ResizeSize,y=ClassifError,group=Classifier))+geom_boxplot()+theme_bw()
+
+#Influence of PixelSize
+optTable=AllFilesTabNoSVCBP[which(AllFilesTabNoSVCBP$Distance=="distance" &AllFilesTabNoSVCBP$Classifier=="fisher"),]
+ggplot(optTable,aes(x=ResizeSize,y=ClassifError,group=ResizeSize))+geom_boxplot()+theme_bw()
