@@ -1,5 +1,6 @@
 #setwd("../../Documents/CS_DST/PR/Assignment/PR/DissRepScenario1/")
-
+library(stringr)
+library(plotly)
 files=list.files()
 AllFilesTab=data.frame()
 
@@ -35,7 +36,7 @@ codeOrdinal=function(tab,parameter,options,codes){
 }
 
 for (file in files){
-  tab=read.csv(file,stringAsFactors=FALSE)
+  tab=read.csv(file)
   size=str_extract(file,"Size.*(.)csv")
   size=gsub("(Size|(.)csv)","",size)
   training=str_extract(file,"Prototypes.*PixelSize")
@@ -59,7 +60,7 @@ p <- errorTable.PPC%>%
                       cmin = min(errorTable.PPC$ClassifError),
                       cmax = 0.05),
           dimensions = list(
-            list(range = c(0,650),
+            list(range = c(0,600),
                  label = 'No.Training', values = ~jitter(as.numeric(Training))),
             list(range = c(0,20),
                  label = 'Resize Size', values = ~jitter(as.numeric(ResizeSize))),
@@ -76,7 +77,7 @@ p <- errorTable.PPC%>%
 
 #Influence of Prototypes and Representatives
 #opt conditions size =8, dist = distance
-optTable=AllFilesTab[which(AllFilesTab$ResizeSize==8&AllFilesTab$Distance=="distance"),]
+optTable=AllFilesTab[which(AllFilesTab$ResizeSize==10&AllFilesTab$Distance=="distance"),]
 optClassifiers=c("loglc","fisher","knnc")
 optTable=optTable[which(optTable$Classifier%in%optClassifiers==TRUE),]
 ggplot(optTable,aes(x=Prototypes,y=ClassifError,group=interaction(Training,Classifier),col=interaction(Training,Classifier)))+geom_line(size=1) +ylim(c(0,0.05))+theme_bw()
@@ -86,3 +87,26 @@ ggplot(AllFilesTabNoSVCBP,aes(x=ResizeSize,y=ClassifError,group=Classifier))+geo
 #Influence of PixelSize
 optTable=AllFilesTabNoSVCBP[which(AllFilesTabNoSVCBP$Distance=="distance" &AllFilesTabNoSVCBP$Classifier=="fisher"),]
 ggplot(optTable,aes(x=ResizeSize,y=ClassifError,group=ResizeSize))+geom_boxplot()+theme_bw()
+
+
+#Influence of PixelSize, compare with Scenario 2, distance = euclidean, classifier fisher, bicubic
+Scenario2=read.csv("../SummaryTablesAllExperiments/DissRepSce2.csv")
+Scenario2=Scenario2[which(Scenario2$method=="Bicubic"),]
+Scenario2=data.frame(Classifier=Scenario2$classif,Distance=Scenario2$dist,Training=rep(10,nrow(Scenario2)),ResizeSize=Scenario2$size,ClassifError=Scenario2$m)
+Scenario1 = AllFilesTab[which(AllFilesTab$Distance=="distance"&(AllFilesTab$Prototypes==100)&AllFilesTab$Training==200),]
+Scenario1$Prototypes=NULL
+Scenario1$Training=200
+
+AllTogether=rbind(Scenario1,Scenario2)
+AllTogetherFisherEuc=AllTogether[which(AllTogether$Classifier=="fisher"&AllTogether$Distance=="distance"),]
+AllTogetherFisherEuc$ResizeSize=as.character(AllTogetherFisherEuc$ResizeSize)
+AllTogetherFisherEuc$ResizeSize[is.na(AllTogetherFisherEuc$ResizeSize)]=13
+AllTogetherFisherEuc$ResizeSize=as.numeric(AllTogetherFisherEuc$ResizeSize)
+AllTogetherFisherEuc$Training=as.factor(AllTogetherFisherEuc$Training)
+library(gridExtra)
+
+ggplot(AllTogetherFisherEuc[which(AllTogetherFisherEuc$Training==200),],aes(x=ResizeSize,y=ClassifError,col=Training,group=Training))+geom_line(size=1)+theme_bw()+theme(legend.position=c(.7,.8))+xlab("Resizing size")+ylab("Classification Error")+labs(color="Number of Training\n objects")
+
+ggplot(AllTogetherFisherEuc[which(AllTogetherFisherEuc$Training==10),],aes(x=ResizeSize,y=ClassifError,col=Training,group=Training))+geom_line(size=1)+theme_bw()+theme(legend.position=c(.7,.8))+xlab("Resizing size")+ylab("Classification Error")+labs(color="Number of Training\n objects")
+
+
