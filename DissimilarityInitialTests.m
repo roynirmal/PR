@@ -317,3 +317,63 @@ filename = strcat("DissimilarityWithPrototypesScenario2PixelSize6MethodBicubicOn
 filename = sprintf('%s.csv', filename);
 cell2csv(filename ,errorTable);
 
+
+%%Learning curves plots
+
+%% Automated version - all training different from representatives - Scenario 1
+
+pixSize=[8,10];
+for pix=1:length(pixSize)
+a=dataPreprocess(pixSize(pix),'bicubic');
+pr_ds=prdataset(a);
+
+nrData = [400 500 600 700 800];
+
+errorTable ={"classifier" ; "loglc"; "fisher"};
+distmeasures = {'distance'};
+for i=1:length(nrData)
+        display(strcat("i ",string(nrData(i))));
+        
+prot=nrData(i)/100;
+nrRep=zeros(1,prot-2);
+for k=1:(prot-2)
+    nrRepMatrix=zeros(prot-2,10);
+    nrRep(k)=200+k*100;
+end
+
+for rep = 1:length(nrRep)
+for cl=1:10
+    nrRepMatrix(rep,cl) = nrRep(rep);
+end
+end
+
+for j=1:length(nrRep)  
+        display(strcat("j ",string(nrRep(j))));
+[trn,tst] = gendat(pr_ds,nrData(i)/1000);
+
+
+for di =1:length(distmeasures)
+    display(strcat("di ",string(di)));
+    dist = distmeasures{di};
+    
+    w=proxm(gendat(trn,nrRepMatrix(j,:)),dist);
+    d=trn*w;
+    
+    w5=loglc(d); %training in the dissimilarity space 
+    e5=testc(tst*w,w5);
+    
+    w7=fisherc(d); %training in the dissimilarity space 
+    e7=testc(tst*w,w7);
+    
+    errors = {strcat(" distance",dist," prototypes",string(nrRep(j))," training",string(nrData(i))); e5; e7};
+    errorTable=[errorTable errors];
+end
+end
+filename = strcat("DissimilarityLOGFISHERPrototypes",string(nrData(i)),"PixelSize",string(pixSize(pix)));
+filename = sprintf('%s.csv', filename);
+cell2csv(filename ,errorTable);
+errorTable ={"classifier" ; "loglc"; "fisher"};
+end
+end
+
+
